@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>예측 결과 기록</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 90%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #ffcc80;
+            font-size: 18px;
+        }
+
+        td img {
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .back-button {
+            margin-top: 30px;
+        }
+
+        .back-button a {
+            text-decoration: none;
+            background-color: #ff9800;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .back-button a:hover {
+            background-color: #e68900;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ✨ 효과음 추가 -->
+    <audio id="resultSound" src="{{ url_for('static', filename='sounds/Gibbon Monkey Sound.mp3') }}" autoplay volume="0.5"></audio>
+
+    <h1>🐵 Monkey Classifier 예측 기록 🐵</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>이미지</th>
+                <th>예측 결과 (Label)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.id }}</td>
+                <td>
+                    <img src="{{ url_for('static', filename=record.path.split('static/')[-1]) }}" alt="업로드된 이미지">
+                </td>
+                <td>{{ record.label }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="back-button">
+        <a href="/">메인으로 돌아가기</a>
+    </div>
+
+</body>
+</html>

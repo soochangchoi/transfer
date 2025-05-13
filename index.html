@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Monkey Classifier</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('{{ url_for('static', filename='monkeey.jpg') }}') no-repeat center center fixed;
+            background-size: cover;
+            text-align: center;
+            padding: 30px;
+            color: #fff;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 60px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
+
+        .upload-section {
+            background: rgba(255, 255, 255, 0.2);
+            color: #333;
+            padding: 50px 40px;
+            border-radius: 24px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255,255,255,0.4);
+            width: 90%;
+            max-width: 600px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .upload-section:hover {
+            transform: scale(1.03);
+            box-shadow: 0px 12px 50px rgba(0,0,0,0.5);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        input[type="file"] {
+            padding: 12px;
+            background: #fff;
+            border: 2px dashed #4CAF50;
+            border-radius: 10px;
+            width: 80%;
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            background: #f0f0f0;
+        }
+
+        input[type="submit"], .button, #music-control {
+            background: linear-gradient(135deg, #6BFFB8, #4CAF50);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0px 6px 15px rgba(0,0,0,0.25);
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        input[type="submit"]:hover, .button:hover, #music-control:hover {
+            background: linear-gradient(135deg, #4CAF50, #388E3C);
+            transform: scale(1.05);
+        }
+
+        img {
+            margin-top: 25px;
+            width: 300px;
+            max-width: 80%;
+            border-radius: 16px;
+            box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
+        }
+
+        .result {
+            margin-top: 25px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+        }
+
+        .button-section {
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🎵 배경음악 추가 -->
+    <audio id="background-music" src="{{ url_for('static', filename='dark.mp3') }}" loop></audio>
+
+    <h1>🐵 Monkey Classifier 🐵</h1>
+
+    <!-- 🎵 음악 재생/정지 버튼 -->
+    <button id="music-control">음악 정지</button>
+
+    <div class="upload-section">
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*"><br>
+            <input type="submit" value="이미지 업로드 및 예측">
+        </form>
+
+        {% if prediction %}
+            <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="업로드한 이미지">
+            <div class="result">
+                예측: {{ prediction }}<br>
+                확신도: {{ confidence | round(2) }}%
+            </div>
+
+            <div class="button-section">
+                <a href="/result" class="button">예측 기록 보기</a>
+            </div>
+        {% else %}
+            <div class="button-section">
+                <a href="/result" class="button">예측 기록 보기</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- 🎵 음악 제어용 스크립트 -->
+    <script>
+        const bgm = document.getElementById('background-music');
+        const musicControl = document.getElementById('music-control');
+        
+        // 기본 볼륨 조정 (0.5 = 50% 볼륨)
+        bgm.volume = 0.5;
+
+        // 버튼 클릭 시 음악 재생/정지
+        musicControl.addEventListener('click', function() {
+            if (bgm.paused) {
+                bgm.play();
+                musicControl.textContent = '음악 정지';
+            } else {
+                bgm.pause();
+                musicControl.textContent = '음악 재생';
+            }
+        });
+    </script>
+
+</body>
+</html>

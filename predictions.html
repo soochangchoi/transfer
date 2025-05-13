@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Results</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+        th, td {
+            padding: 8px 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        img {
+            max-width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align: center;">Prediction Results</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Predicted Label</th>
+            <th>Confidence (%)</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pred in predictions %}
+        <tr>
+            <td>{{ pred.id }}</td>
+            <td><img src="{{ url_for('static', filename=pred.image_path.split('static/')[-1]) }}" alt="Image"></td>
+            <td>{{ pred.predicted_label }}</td>
+            <td>{{ "%.2f" | format(pred.confidence) }}</td>
+            <td>{{ pred.created_at.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
